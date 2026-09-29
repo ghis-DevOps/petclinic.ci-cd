@@ -16,6 +16,19 @@ Terraform for deploying PetClinic to AWS: ECS Fargate behind an ALB, CloudFront 
 
 ## Usage
 
+### Recovering the database secret
+
+Secrets Manager rejects `CreateSecret` when the same name is still scheduled for deletion. If Terraform reports that `petclinic/prod/db` is scheduled for deletion, restore it first, then import it because it may be missing from Terraform state:
+
+```bash
+aws secretsmanager restore-secret --secret-id petclinic/prod/db --region us-east-1
+terraform import aws_secretsmanager_secret.db petclinic/prod/db
+terraform plan
+terraform apply
+```
+
+Use the configured `project_name`, `environment`, and `aws_region` if they differ from these defaults. Restoring preserves the secret and its current value. Importing only reconciles Terraform state; it does not rotate the database password. The secret resource uses a 7-day recovery window for future Terraform deletions.
+
 ```bash
 terraform init
 terraform plan -out=tfplan

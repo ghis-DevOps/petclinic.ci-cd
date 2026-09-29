@@ -4,7 +4,8 @@ resource "random_password" "db" {
 }
 
 resource "aws_secretsmanager_secret" "db" {
-  name = "${var.project_name}/${var.environment}/db"
+  name                    = "${var.project_name}/${var.environment}/db"
+  recovery_window_in_days = 7
 }
 
 resource "aws_secretsmanager_secret_version" "db" {

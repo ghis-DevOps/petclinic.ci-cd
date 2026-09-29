@@ -18,7 +18,7 @@ locals {
   # is allowed to assume it.
   create_github_deploy_role = var.github_org != ""
 
-  
+
   github_oidc_subjects = length(var.github_oidc_subjects) > 0 ? var.github_oidc_subjects : [
     "repo:${var.github_org}@*/${var.github_repo}@*:*"
   ]
