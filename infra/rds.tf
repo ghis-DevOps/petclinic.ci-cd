@@ -8,6 +8,13 @@ resource "aws_secretsmanager_secret" "db" {
   recovery_window_in_days = 7
 }
 
+# One-time state migration: remove this import block after the secret is
+# successfully adopted into the Terraform state for this workspace.
+import {
+  to = aws_secretsmanager_secret.db
+  id = "${var.project_name}/${var.environment}/db"
+}
+
 resource "aws_secretsmanager_secret_version" "db" {
   secret_id = aws_secretsmanager_secret.db.id
   secret_string = jsonencode({
